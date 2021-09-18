@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/sam-spain/wedding-inv-go-server/issues"
   },
-  "homepage": "https://github.com/sam-spain/wedding-inv-go-server#readme"
+  "homepage": "https://github.com/sam-spain/wedding-inv-go-server#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
