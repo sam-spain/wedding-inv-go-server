@@ -1,0 +1,19 @@
+{
+  "name": "wedding-inv-go-server",
+  "version": "1.0.0",
+  "description": "Server to handle wedding inv go requests",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sam-spain/wedding-inv-go-server.git"
+  },
+  "author": "Sam Spain",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sam-spain/wedding-inv-go-server/issues"
+  },
+  "homepage": "https://github.com/sam-spain/wedding-inv-go-server#readme"
+}
