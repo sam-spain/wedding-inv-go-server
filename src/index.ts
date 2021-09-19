@@ -1,9 +1,11 @@
 import express from "express";
 import dotenv from "dotenv";
-
+import { connectDb } from "./config/db";
 import inviteeRouter from "./routes/inviteeRouter";
 
 dotenv.config({ path: "./src/config/config.env" });
+connectDb();
+
 const app = express();
 const PORT = process.env.PORT || 8080; // default port to listen
 
