@@ -24,7 +24,9 @@
   },
   "homepage": "https://github.com/sam-spain/wedding-inv-go-server#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "mongoose": "^6.0.6"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
