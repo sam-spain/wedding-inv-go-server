@@ -38,5 +38,22 @@ describe("Invitee API Endpoint", () => {
     .expect(500);
   })
 
+  test('Respond to POST with created invitee and 201', () => {
+    InviteeModel.create = jest.fn().mockResolvedValue(samSpainInvitee);
+    return Request(Server)
+      .post('/api/v1/invitee')
+      .expect(201)
+      .expect(samSpainInvitee);
+  });
+
+  test('Respond to failed POST with 500', () => {
+    InviteeModel.create = jest.fn().mockImplementation(() => {
+      throw new Error();
+    });
+    return Request(Server)
+      .post('/api/v1/invitee')
+      .expect(500)
+      .expect({err: {}});
+  });
 
 });
