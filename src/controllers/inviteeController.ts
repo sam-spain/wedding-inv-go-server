@@ -24,7 +24,7 @@ export async function createInvitee(req: any, res: any, next: any) {
         const newInvitee = await InviteeModel.create(req.body);
         res.status(201).json(newInvitee);
     } catch (err) {
-        res.status(500).json({message: 'Failed to create invitee.'});
+        res.status(500).json({err});
     }
 }
 
