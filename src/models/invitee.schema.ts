@@ -4,7 +4,7 @@ const InviteeSchema = new Schema({
   enteredName: String,
   preferredName: String,
   inviteeStatus: {
-    type: [String],
+    type: String,
     required: true,
     enum: ["Not Sent", "Sent", "Responded", "Revoked"],
   },
