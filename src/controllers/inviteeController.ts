@@ -1,7 +1,14 @@
+import { InviteeModel } from "../models/invitee.model";
+
 // @description Get all people invited
 // @route       GET /api/v1/invitee
-export function getInvitees(req : any, res: any, next: any) {
-    res.status(200).json([{ name: "sam" }, { name: "karen" }]);
+export async function getInvitees(req : any, res: any, next: any) {
+    try{
+        const invitees = await InviteeModel.find();
+        res.status(200).json(invitees);
+    } catch (err) {
+        res.status(500).json({message: 'Failed to retrieve invitees.'});
+    }
 }
 
 // @description Get person invited by ID
@@ -12,8 +19,13 @@ export function getInvitee(req: any, res: any, next: any) {
 
 // @description Invite new person
 // @route       POST /api/v1/invitee
-export function createInvitee(req: any, res: any, next: any) {
-    res.status(200).json({ "created invitee": { name: "sam" } });
+export async function createInvitee(req: any, res: any, next: any) {
+    try {
+        const newInvitee = await InviteeModel.create(req.body);
+        res.status(201).json(newInvitee);
+    } catch (err) {
+        res.status(500).json({message: 'Failed to create invitee.'});
+    }
 }
 
 // @description Update existing invitee
