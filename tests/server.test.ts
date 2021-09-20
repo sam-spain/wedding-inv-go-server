@@ -27,4 +27,16 @@ describe("Invitee API Endpoint", () => {
       .expect(200)
       .expect([samSpainInvitee, karenGoInvitee]);
   });
+
+  test("Respond to failed GET with 500", () => {
+    InviteeModel.find = jest.fn().mockImplementation(() => {
+      throw new Error();
+    })
+    return Request(Server)
+    .get('/api/v1/invitee')
+    .expect({message: 'Failed to retrieve invitees.'})
+    .expect(500);
+  })
+
+
 });
