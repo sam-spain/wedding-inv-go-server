@@ -1,11 +1,11 @@
-import express from "express";
-import {
+const express = require("express");
+const {
   getInvitee,
   getInvitees,
   createInvitee,
   updateInvitee,
   deleteInvitee,
-} from "../controllers/inviteeController";
+} = require("../controllers/inviteeController");
 const inviteeRouter = express.Router();
 
 inviteeRouter.route("/").get(getInvitees).post(createInvitee);
@@ -15,4 +15,4 @@ inviteeRouter
   .put(updateInvitee)
   .delete(deleteInvitee);
 
-export default inviteeRouter;
+module.exports = inviteeRouter;

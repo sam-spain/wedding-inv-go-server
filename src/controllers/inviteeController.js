@@ -1,10 +1,10 @@
-import { InviteeModel } from "../models/invitee.model";
+const Invitee = require("../models/invitee");
 
 // @description Get all people invited
 // @route       GET /api/v1/invitee
-export async function getInvitees(req : any, res: any, next: any) {
+exports.getInvitees = async function getInvitees(req, res, next) {
     try{
-        const invitees = await InviteeModel.find();
+        const invitees = await Invitee.find();
         res.status(200).json(invitees);
     } catch (err) {
         res.status(500).json(err);
@@ -13,9 +13,9 @@ export async function getInvitees(req : any, res: any, next: any) {
 
 // @description Get person invited by ID
 // @route       GET /api/v1/invitee/:id
-export async function getInvitee(req: any, res: any, next: any) {
+exports.getInvitee = async function getInvitee(req, res, next) {
     try {
-        const foundInvitee = await InviteeModel.findById(req.params.id);
+        const foundInvitee = await Invitee.findById(req.params.id);
         if(foundInvitee)
             res.status(200).json(foundInvitee);
         else res.status(404).json({message: 'No invitee with matching ID found.'});
@@ -26,9 +26,9 @@ export async function getInvitee(req: any, res: any, next: any) {
 
 // @description Invite new person
 // @route       POST /api/v1/invitee
-export async function createInvitee(req: any, res: any, next: any) {
+exports.createInvitee = async function createInvitee(req, res, next) {
     try {
-        const newInvitee = await InviteeModel.create(req.body);
+        const newInvitee = await Invitee.create(req.body);
         res.status(201).json(newInvitee);
     } catch (err) {
         res.status(500).json(err);
@@ -37,9 +37,9 @@ export async function createInvitee(req: any, res: any, next: any) {
 
 // @description Update existing invitee
 // @route       PUT /api/v1/invitee/:id
-export async function updateInvitee(req: any, res: any, next: any) {
+exports.updateInvitee = async function updateInvitee(req, res, next) {
     try {
-        const updatedInvitee = await InviteeModel.findByIdAndUpdate(
+        const updatedInvitee = await Invitee.findByIdAndUpdate(
           req.params.id,
           req.body,
           {
@@ -60,9 +60,9 @@ export async function updateInvitee(req: any, res: any, next: any) {
 
 // @description Delete existing invitee
 // @route       DELETE /api/v1/invitee/:id
-export async function deleteInvitee (req: any, res: any, next: any) {
+exports.deleteInvitee = async function deleteInvitee (req, res, next) {
     try {
-        const deletedInvitee = await InviteeModel.findByIdAndDelete(req.params.id);
+        const deletedInvitee = await Invitee.findByIdAndDelete(req.params.id);
         if (!deletedInvitee)
           return res
             .status(404)
