@@ -1,8 +1,8 @@
-import Server from './server';
-import dotenv from "dotenv";
-import express from "express";
+const Server = require('./server');
+const dotenv = require("dotenv");
+const express = require("express");
 const PORT = process.env.PORT || 8080; // default port to listen
-import { connectDb } from "./config/db";
+const { connectDb } = require("./config/db");
 dotenv.config({ path: "./src/config/config.env" });
 
 connectDb();
@@ -20,7 +20,7 @@ const server = Server.listen(PORT, () => {
   console.log(`server started at http://localhost:${PORT}`);
 });
 
-process.on("unhandledRejection", (err: any, promise) => {
+process.on("unhandledRejection", (err, promise) => {
   // tslint:disable-next-line:no-console
   console.log(`Error: ${err.message}`);
   server.close(() => process.exit(1));
