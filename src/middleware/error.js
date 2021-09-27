@@ -40,13 +40,12 @@ const errorHandler = (inputError, req, res, next) => {
 
   if(newErrorResponse) {
     res.status(newErrorResponse.statusCode).json(newErrorResponse.response);
+  } else {
+    res.status(500).json({
+      errorType: "Unknown",
+      content: "An unexpected server error occurred"
+    })
   }
-
-/*   res.status(defaultError.statusCode || 500).json({
-    success: false,
-    error: defaultError.message || "Server Error", // USE ERROR BODY VARIABLE INSTEAD
-  });
- */
 };
 
 module.exports = errorHandler;
