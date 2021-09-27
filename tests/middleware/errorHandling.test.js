@@ -59,4 +59,42 @@ describe("Error Handling", () => {
     expect(res.status).toHaveBeenCalledWith(409);
     expect(res.json).toHaveBeenCalledWith(expectedErrorResponse);
   });
+
+  test("Validation errors", async () => {
+    const expectedErrorResponse = {
+      errorType: "validation",
+      content: [
+        {
+          exampleRequiredField: "This field is required",
+        },
+        {
+          exampleValidatedField:
+            "This field cannot be more than 10 characters long",
+        },
+      ],
+    };
+
+    const inputError = {
+      name: "ValidationError",
+      errors: {
+        exampleRequiredField: {
+          properties: {
+            message: "This field is required",
+            path: "exampleRequiredField",
+          },
+        },
+        exampleValidatedField: {
+          properties: {
+            message: "This field cannot be more than 10 characters long",
+            path: "exampleValidatedField",
+          },
+        },
+      },
+    };
+
+    const res = mockResponse();
+    errorHandler(inputError, mockRequest, res, mockedNext);
+    expect(res.status).toHaveBeenCalledWith(422);
+    expect(res.json).toHaveBeenCalledWith(expectedErrorResponse);
+  });
 });

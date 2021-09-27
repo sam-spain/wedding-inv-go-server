@@ -27,12 +27,13 @@ const errorHandler = (inputError, req, res, next) => {
       }
     }
   }
-/*
+
 
   // Mongoose validation error
   if(inputError.name === 'ValidationError') {
-    responseError = {
-      statusCode: 400,
+    console.log(inputError.errors);
+    newErrorResponse = {
+      statusCode: 422,
       response: {
         errorType: "validation",
         content: Object.entries(inputError.errors).map(error => {
@@ -41,7 +42,7 @@ const errorHandler = (inputError, req, res, next) => {
         })
       }
     }
-  } */
+  }
 
   if(newErrorResponse) {
     res.status(newErrorResponse.statusCode).json(newErrorResponse.response);
