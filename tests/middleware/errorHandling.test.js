@@ -18,19 +18,17 @@ describe("Error Handling", () => {
 
   test("Error that is not recognised is listed as generic server error", async () => {
     const expectedErrorResponse = {
-        errorType: "Unknown",
-        content: "An unexpected server error occurred"
-      };
-
-      const inputError = {
-        name: "Any Unrecognised Name",
-      };
-
-      const res = mockResponse();
-      errorHandler(inputError, mockRequest, res, mockedNext);
-      expect(res.status).toHaveBeenCalledWith(500);
-      expect(res.json).toHaveBeenCalledWith(expectedErrorResponse);
-  })
+      errorType: "Unknown",
+      content: "An unexpected server error occurred",
+    };
+    const inputError = {
+      name: "Any Unrecognised Name",
+    };
+    const res = mockResponse();
+    errorHandler(inputError, mockRequest, res, mockedNext);
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith(expectedErrorResponse);
+  });
 
   test("CastError means an object with ID could not be found", async () => {
     const badId = "6148e90a0464b2234d4f6f84";
@@ -48,4 +46,17 @@ describe("Error Handling", () => {
     expect(res.json).toHaveBeenCalledWith(expectedErrorResponse);
   });
 
+  test("Mongoose duplicate key code 11000", async () => {
+    const expectedErrorResponse = {
+      errorType: "ClientFail",
+      content: "Duplicate field value entered",
+    };
+    const inputError = {
+      code: 11000,
+    };
+    const res = mockResponse();
+    errorHandler(inputError, mockRequest, res, mockedNext);
+    expect(res.status).toHaveBeenCalledWith(409);
+    expect(res.json).toHaveBeenCalledWith(expectedErrorResponse);
+  });
 });

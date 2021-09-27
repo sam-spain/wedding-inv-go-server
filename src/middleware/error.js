@@ -18,11 +18,16 @@ const errorHandler = (inputError, req, res, next) => {
     }
   }
 
-/*   // Mongoose duplicate key
   if(inputError.code === 11000) {
-    const message = "Duplicate field value entered";
-    defaultError = new ErrorResponse(message, 409);
+    newErrorResponse = {
+      statusCode: 409,
+      response: {
+        errorType: "ClientFail",
+        content: "Duplicate field value entered"
+      }
+    }
   }
+/*
 
   // Mongoose validation error
   if(inputError.name === 'ValidationError') {
