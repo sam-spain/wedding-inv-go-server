@@ -42,3 +42,5 @@ const InviteeSchema = new mongoose.Schema({
     dietaryNotes: String,
     additionalNotes: String,
   });
+
+  module.exports = mongoose.model("Invitee", InviteeSchema);

@@ -5,12 +5,12 @@ const errorHandler = (inputError, req, res, next) => {
 
   let newErrorResponse = undefined;
 
-  if (inputError.name === "CastError") {
+  if (inputError.name === "CastError" || inputError.name === "NotFoundError") {
     newErrorResponse = {
       statusCode: 404,
       response: {
         errorType: "ClientFail",
-        content: `Resource not found with id of ${inputError.value}`,
+        content: `${inputError.message} not found with id of ${inputError.value}`,
       },
     };
   }

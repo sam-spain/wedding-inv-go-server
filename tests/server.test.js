@@ -3,6 +3,16 @@ const Server = require("../src/server");
 const Invitee = require("../src/models/invitee")
 
 describe("Invitee API Endpoint", () => {
+ 
+  const genericServerError = {
+    errorType: "Unknown",
+    content: "An unexpected server error occurred",
+  };
+
+  const notFoundError = {
+    errorType: "ClientFail",
+    content: "Invitee not found with id of 1",
+  };
 
   const samSpainInvitee = {
     enteredName: 'Sam Spain',
@@ -34,7 +44,7 @@ describe("Invitee API Endpoint", () => {
     })
     return Request(Server)
     .get('/api/v1/invitee')
-    .expect({})
+    .expect(genericServerError)
     .expect(500);
   })
 
@@ -53,7 +63,7 @@ describe("Invitee API Endpoint", () => {
     });
     return Request(Server)
     .get('/api/v1/invitee/1')
-    .expect({})
+    .expect(genericServerError)
     .expect(500);
   });
   
@@ -61,7 +71,7 @@ describe("Invitee API Endpoint", () => {
     Invitee.findById = jest.fn().mockResolvedValue(null);
     return Request(Server)
     .get('/api/v1/invitee/1')
-    .expect({message: 'No invitee with matching ID found.'})
+    .expect(notFoundError)
     .expect(404);
   });
   
@@ -81,7 +91,7 @@ describe("Invitee API Endpoint", () => {
     return Request(Server)
       .put('/api/v1/invitee/1')
       .expect(404)
-      .expect({message: 'Failed to find invitee to update.'});
+      .expect(notFoundError);
   });
 
   test('Respond to PUT with ID with 500 when failed', () => {
@@ -91,7 +101,7 @@ describe("Invitee API Endpoint", () => {
     return Request(Server)
       .put('/api/v1/invitee/1')
       .expect(500)
-      .expect({});
+      .expect(genericServerError);
   });
 
   test('Respond to POST with created invitee and 201', () => {
@@ -109,7 +119,7 @@ describe("Invitee API Endpoint", () => {
     return Request(Server)
     .post('/api/v1/invitee')
     .expect(500)
-    .expect({});
+    .expect(genericServerError);
   });
 
   test('Respond to DELETE with ID with empty and 204', () => {
@@ -125,7 +135,7 @@ describe("Invitee API Endpoint", () => {
     return Request(Server)
       .delete('/api/v1/invitee/1')
       .expect(404)
-      .expect({message: 'Failed to find invitee to delete.'});
+      .expect(notFoundError);
   });
 
   test('Respond to DELETE that failed with 500', () => {
@@ -135,7 +145,7 @@ describe("Invitee API Endpoint", () => {
     return Request(Server)
       .delete('/api/v1/invitee/1')
       .expect(500)
-      .expect({});
+      .expect(genericServerError);
   });
   
 });
