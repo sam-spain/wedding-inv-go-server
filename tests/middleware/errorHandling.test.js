@@ -37,6 +37,7 @@ describe("Error Handling", () => {
       content: `Resource not found with id of ${badId}`,
     };
     const inputError = {
+      message: "Resource",
       name: "CastError",
       value: badId,
     };
