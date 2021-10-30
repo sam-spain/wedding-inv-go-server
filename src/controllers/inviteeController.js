@@ -5,7 +5,14 @@ const asyncHandler = require("../middleware/async");
 // @description Get all people invited
 // @route       GET /api/v1/invitee
 exports.getInvitees = asyncHandler(async (req, res, next) => {
-  const invitees = await Invitee.find(req.query);
+  let queryStr = JSON.stringify(req.query);
+  queryStr = queryStr.replace(
+    /\b(gt|gte|lt|lte|in)\b/g,
+    (match) => `$${match}`
+  );
+  console.log(queryStr);
+  let query = Invitee.find(JSON.parse(queryStr));
+  const invitees = await query;
   res.status(200).json(invitees);
 });
 
