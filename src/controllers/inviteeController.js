@@ -27,7 +27,6 @@ exports.getInvitees = asyncHandler(async (req, res, next) => {
   } else {
     query.sort("inviteeStatus");
   }
-
   const invitees = await query;
   res.status(200).json(invitees);
 });
@@ -44,7 +43,6 @@ exports.getInvitee = asyncHandler(async (req, res, next) => {
 // @description Invite new person
 // @route       POST /api/v1/invitee
 exports.createInvitee = asyncHandler(async (req, res, next) => {
-  console.log("Create");
   const newInvitee = await Invitee.create(req.body);
   res.status(201).json(newInvitee);
 });
@@ -69,7 +67,7 @@ exports.updateInvitee = asyncHandler(async (req, res, next) => {
 // @description Delete existing invitee
 // @route       DELETE /api/v1/invitee/:id
 exports.deleteInvitee = asyncHandler(async (req, res, next) => {
-  const deletedInvitee = await Invitee.findByIdAndDelete(req.params.id);
+  const deletedInvitee = await Invitee.deleteOne(req.params.id);
   if (deletedInvitee) return res.status(204).json({});
   else
     return next(new ErrorResponse("Invitee", "NotFoundError", req.params.id));
