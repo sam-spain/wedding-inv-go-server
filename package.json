@@ -23,6 +23,7 @@
     "mongoose": "^6.0.7"
   },
   "devDependencies": {
+    "@jest/globals": "^27.5.1",
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "dotenv": "^10.0.0",
