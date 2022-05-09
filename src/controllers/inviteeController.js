@@ -9,12 +9,12 @@ exports.getInvitees = asyncHandler(async (req, res, next) => {
   const requestQuery = { ...req.query };
   excludedParams.forEach((param) => delete requestQuery[param]);
 
-  let queryStr = JSON.stringify(requestQuery);
-  queryStr = queryStr.replace(
+  let queryString = JSON.stringify(requestQuery);
+  queryString = queryString.replace(
     /\b(gt|gte|lt|lte|in)\b/g,
     (match) => `$${match}`
   );
-  let query = Invitee.find(JSON.parse(queryStr));
+  let query = Invitee.find(JSON.parse(queryString));
 
   if (req.query.select) {
     const fields = req.query.select.split(",").join(" ");
