@@ -45,7 +45,10 @@ describe("Invitee API Endpoint", () => {
     return Request(Server)
       .get("/api/v1/invitee")
       .expect(200)
-      .expect([samSpainInvitee, karenGoInvitee]);
+      .expect({
+        count: 2,
+        pagination: {}, data: [samSpainInvitee, karenGoInvitee]
+      });
   });
 
   test("Respond to failed GET with 500", () => {

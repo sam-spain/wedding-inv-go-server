@@ -29,12 +29,31 @@ exports.getInvitees = asyncHandler(async (req, res, next) => {
   }
 
   const page = parseInt(req.query.page, 10) || 1;
-  const limit = parseInt(req.query.limit, 10) || 10;
-  const skip  = (page - 1) * limit;
+  const limit = parseInt(req.query.limit, 10) || 25
+  const startIndex = (page - 1) * limit
+  const endIndex = page * limit
+  const total = await Invitee.countDocuments()
 
-  query = query.skip(skip).limit(limit);
+
+  query = query.skip(startIndex).limit(limit);
   const invitees = await query;
-  res.status(200).json(invitees);
+
+  const pagination = {};
+  if(endIndex < total) {
+    pagination.next = {
+      page: page + 1,
+      limit
+    }
+  }
+
+  if(startIndex > 0) {
+    pagination.prev = {
+      page: page -1,
+      limit
+    }
+  }
+
+  res.status(200).json({count: invitees.length, pagination: pagination, data: invitees});
 });
 
 // @description Get person invited by ID
