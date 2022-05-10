@@ -1,5 +1,4 @@
 const errorHandler = (inputError, req, res, next) => {
-  console.log("Error handler");
   let defaultError = { ...inputError };
   defaultError.message = inputError.message;
 
@@ -26,7 +25,6 @@ const errorHandler = (inputError, req, res, next) => {
   }
 
   if (inputError.name === "ValidationError") {
-    console.log(inputError.errors);
     newErrorResponse = {
       statusCode: 422,
       response: {
