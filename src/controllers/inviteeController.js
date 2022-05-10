@@ -5,7 +5,7 @@ const asyncHandler = require("../middleware/async");
 // @description Get all people invited
 // @route       GET /api/v1/invitee
 exports.getInvitees = asyncHandler(async (req, res, next) => {
-  const excludedParams = ["select, sort"];
+  const excludedParams = ["select", "sort", "page", "limit"];
   const requestQuery = { ...req.query };
   excludedParams.forEach((param) => delete requestQuery[param]);
 
@@ -27,6 +27,12 @@ exports.getInvitees = asyncHandler(async (req, res, next) => {
   } else {
     query.sort("inviteeStatus");
   }
+
+  const page = parseInt(req.query.page, 10) || 1;
+  const limit = parseInt(req.query.limit, 10) || 10;
+  const skip  = (page - 1) * limit;
+
+  query = query.skip(skip).limit(limit);
   const invitees = await query;
   res.status(200).json(invitees);
 });
