@@ -37,6 +37,17 @@ const errorHandler = (inputError, req, res, next) => {
     };
   }
 
+  if (inputError.name === "Unauthorized") {
+    console.log("Error handling for wrong password");
+    newErrorResponse = {
+      statusCode: 401,
+      response: {
+        errorType: "validation",
+        content: "Invalid Credentials",
+      },
+    };
+  }
+
   if (newErrorResponse) {
     res.status(newErrorResponse.statusCode).json(newErrorResponse.response);
   } else {
