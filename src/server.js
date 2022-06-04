@@ -1,6 +1,7 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const inviteeRouter = require("./routes/inviteeRouter");
+const authRouter = require("./routes/authRouter");
 const errorHandler = require("./middleware/error");
 const allowClient = require("./middleware/allowClient");
 const morgan = require("morgan");
@@ -13,5 +14,6 @@ app.use(morgan("dev"));
 
 app.use(allowClient);
 app.use("/api/v1/invitee", inviteeRouter);
+app.use("/api/v1/auth", authRouter);
 app.use(errorHandler);
 module.exports = app;
