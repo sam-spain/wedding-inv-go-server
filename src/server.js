@@ -11,8 +11,8 @@ dotenv.config({ path: "./src/config/config.env" });
 
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
 app.use(morgan("dev"));
-app.use(cookieParser);
 app.use(allowClient);
 app.use("/api/v1/invitee", inviteeRouter);
 app.use("/api/v1/auth", authRouter);
