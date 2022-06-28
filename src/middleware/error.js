@@ -48,6 +48,16 @@ const errorHandler = (inputError, req, res, next) => {
     };
   }
 
+  if (inputError.name === "Unauthorized Role") {
+    newErrorResponse = {
+      statusCode: 403,
+      response: {
+        errorType: "validation",
+        content: inputError.message,
+      },
+    };
+  }
+
   if (newErrorResponse) {
     res.status(newErrorResponse.statusCode).json(newErrorResponse.response);
   } else {
