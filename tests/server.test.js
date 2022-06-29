@@ -1,15 +1,17 @@
 const Request = require("supertest");
 const Server = require("../src/server");
 const Invitee = require("../src/models/invitee");
+const User = require("../src/models/user");
 const Mockingoose = require("mockingoose");
+const jwt = require("jsonwebtoken");
 
 describe("Invitee API Endpoint", () => {
-  const genericServerError = {
+  const GENERIC_SERVER_ERROR = {
     errorType: "Unknown",
     content: "An unexpected server error occurred",
   };
 
-  const samSpainInvitee = {
+  const SAM_SPAIN_INVITEE = {
     enteredName: "Sam Spain",
     inviteeStatus: "Sent",
     preferredContact: "Email",
@@ -20,7 +22,7 @@ describe("Invitee API Endpoint", () => {
     _id: "6240df980f82cbb88ae6957f",
   };
 
-  const karenGoInvitee = {
+  const KAREN_GO_INVITEE = {
     enteredName: "Karen Go",
     inviteeStatus: "Sent",
     preferredContact: "Email",
@@ -31,23 +33,35 @@ describe("Invitee API Endpoint", () => {
     _id: "6240df980f82cbb88ae69580",
   };
 
-  const notFoundError = {
+  const NOT_FOUND_ERROR = {
     errorType: "ClientFail",
-    content: "Invitee not found with id of " + samSpainInvitee._id,
+    content: "Invitee not found with id of " + SAM_SPAIN_INVITEE._id,
   };
+
+  const ADMIN_USER = {
+    id: 300,
+    role: "admin",
+  };
+
+  const BEARER_TOKEN = "Bearer token";
 
   beforeEach(() => {
     Mockingoose.resetAll();
+    mockAuthentication();
   });
 
   test("Respond to GET with invitees and 200", () => {
-    Mockingoose(Invitee).toReturn([samSpainInvitee, karenGoInvitee], "find");
+    Mockingoose(Invitee).toReturn(
+      [SAM_SPAIN_INVITEE, KAREN_GO_INVITEE],
+      "find"
+    );
     return Request(Server)
       .get("/api/v1/invitee")
       .expect(200)
       .expect({
         count: 2,
-        pagination: {}, data: [samSpainInvitee, karenGoInvitee]
+        pagination: {},
+        data: [SAM_SPAIN_INVITEE, KAREN_GO_INVITEE],
       });
   });
 
@@ -55,41 +69,42 @@ describe("Invitee API Endpoint", () => {
     Mockingoose(Invitee).toReturn(new Error("Unexpected error"), "find");
     return Request(Server)
       .get("/api/v1/invitee")
-      .expect(genericServerError)
+      .expect(GENERIC_SERVER_ERROR)
       .expect(500);
   });
 
   test("Respond to GET by ID with invitee and 200", () => {
-    Mockingoose(Invitee).toReturn(samSpainInvitee, "findOne");
+    Mockingoose(Invitee).toReturn(SAM_SPAIN_INVITEE, "findOne");
     return Request(Server)
-      .get("/api/v1/invitee/" + samSpainInvitee._id)
-      .expect(samSpainInvitee)
+      .get("/api/v1/invitee/" + SAM_SPAIN_INVITEE._id)
+      .expect(SAM_SPAIN_INVITEE)
       .expect(200);
   });
 
   test("Respond to failed GET by ID with 500", () => {
     Mockingoose(Invitee).toReturn(new Error("Unexpected error"), "findOne");
     return Request(Server)
-      .get("/api/v1/invitee/" + samSpainInvitee._id)
-      .expect(genericServerError)
+      .get("/api/v1/invitee/" + SAM_SPAIN_INVITEE._id)
+      .expect(GENERIC_SERVER_ERROR)
       .expect(500);
   });
 
   test("Respond to empty GET by ID with 404", () => {
     Mockingoose(Invitee).toReturn(null, "findOne");
     return Request(Server)
-      .get("/api/v1/invitee/" + samSpainInvitee._id)
-      .expect(notFoundError)
+      .get("/api/v1/invitee/" + SAM_SPAIN_INVITEE._id)
+      .expect(NOT_FOUND_ERROR)
       .expect(404);
   });
 
   test("Respond to PUT with ID with updated invitee and 200", () => {
-    Mockingoose(Invitee).toReturn(samSpainInvitee, "findOneAndUpdate");
+    Mockingoose(Invitee).toReturn(SAM_SPAIN_INVITEE, "findOneAndUpdate");
     const updatedInvitee = {
-      updatedInvitee: samSpainInvitee,
+      updatedInvitee: SAM_SPAIN_INVITEE,
     };
     return Request(Server)
-      .put("/api/v1/invitee/" + samSpainInvitee._id)
+      .put("/api/v1/invitee/" + SAM_SPAIN_INVITEE._id)
+      .set("authorization", BEARER_TOKEN)
       .expect(updatedInvitee)
       .expect(200);
   });
@@ -97,9 +112,10 @@ describe("Invitee API Endpoint", () => {
   test("Respond to PUT with ID with 404 when failed to find", () => {
     Mockingoose(Invitee).toReturn(null, "findOneAndUpdate");
     return Request(Server)
-      .put("/api/v1/invitee/" + samSpainInvitee._id)
+      .put("/api/v1/invitee/" + SAM_SPAIN_INVITEE._id)
+      .set("authorization", BEARER_TOKEN)
       .expect(404)
-      .expect(notFoundError);
+      .expect(NOT_FOUND_ERROR);
   });
 
   test("Respond to PUT with ID with 500 when failed", () => {
@@ -108,15 +124,16 @@ describe("Invitee API Endpoint", () => {
       "findOneAndUpdate"
     );
     return Request(Server)
-      .put("/api/v1/invitee/" + samSpainInvitee._id)
+      .put("/api/v1/invitee/" + SAM_SPAIN_INVITEE._id)
+      .set("authorization", BEARER_TOKEN)
       .expect(500)
-      .expect(genericServerError);
+      .expect(GENERIC_SERVER_ERROR);
   });
 
   test("Respond to POST with created invitee and 201", () => {
     jest
       .spyOn(Invitee, "create")
-      .mockImplementationOnce(async () => samSpainInvitee);
+      .mockImplementationOnce(async () => SAM_SPAIN_INVITEE);
     return Request(Server)
       .post("/api/v1/invitee")
       .send({
@@ -124,21 +141,26 @@ describe("Invitee API Endpoint", () => {
         invitedToCeremony: true,
         enteredName: "Karen Go",
       })
+      .set("authorization", BEARER_TOKEN)
       .expect(201)
-      .expect(samSpainInvitee);
+      .expect(SAM_SPAIN_INVITEE);
   });
 
   test("Respond to failed POST with 500", () => {
     jest
       .spyOn(Invitee, "create")
       .mockImplementationOnce(new Error("Unexpected error"));
-    return Request(Server).post("/api/v1/invitee").expect(genericServerError);
+    return Request(Server)
+      .post("/api/v1/invitee")
+      .set("authorization", BEARER_TOKEN)
+      .expect(GENERIC_SERVER_ERROR);
   });
 
   test("Respond to DELETE with ID with empty and 204", () => {
-    Mockingoose(Invitee).toReturn(samSpainInvitee, "deleteOne");
+    Mockingoose(Invitee).toReturn(SAM_SPAIN_INVITEE, "deleteOne");
     return Request(Server)
-      .delete("/api/v1/invitee/" + samSpainInvitee._id)
+      .delete("/api/v1/invitee/" + SAM_SPAIN_INVITEE._id)
+      .set("authorization", BEARER_TOKEN)
       .expect(204)
       .expect({});
   });
@@ -146,16 +168,23 @@ describe("Invitee API Endpoint", () => {
   test("Respond to DELETE where invitee could not be found with 404", () => {
     Mockingoose(Invitee).toReturn(null, "deleteOne");
     return Request(Server)
-      .delete("/api/v1/invitee/" + samSpainInvitee._id)
+      .delete("/api/v1/invitee/" + SAM_SPAIN_INVITEE._id)
+      .set("authorization", BEARER_TOKEN)
       .expect(404)
-      .expect(notFoundError);
+      .expect(NOT_FOUND_ERROR);
   });
 
   test("Respond to DELETE that failed with 500", () => {
     Mockingoose(Invitee).toReturn(new Error("Unexpected error"), "deleteOne");
     return Request(Server)
-      .delete("/api/v1/invitee/" + samSpainInvitee._id)
+      .delete("/api/v1/invitee/" + SAM_SPAIN_INVITEE._id)
+      .set("authorization", BEARER_TOKEN)
       .expect(500)
-      .expect(genericServerError);
+      .expect(GENERIC_SERVER_ERROR);
   });
+
+  function mockAuthentication() {
+    jest.spyOn(jwt, "verify").mockReturnValueOnce({ id: ADMIN_USER.id });
+    Mockingoose(User).toReturn(ADMIN_USER, "findOne");
+  }
 });
