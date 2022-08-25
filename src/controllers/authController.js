@@ -57,6 +57,13 @@ exports.getMe = asyncHandler(async (req, res, next) => {
   });
 });
 
+// @description Delete token cookie used for login
+// @route DELETE /api/v1/auth/logout
+// @access public
+exports.deleteTokenCookie = asyncHandler(async (req, res, next) => {
+  res.clearCookie("token").status(204).end();
+})
+
 const sendTokenResponse = (user, statusCode, res) => {
   const token = user.getSignedJwtToken();
   const options = {

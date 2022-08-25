@@ -2,6 +2,12 @@ const Invitee = require("../models/invitee");
 const ErrorResponse = require("../util/errorResponse");
 const asyncHandler = require("../middleware/async");
 
+exports.getInviteeFromUserAccessToken = asyncHandler(async (req, res, next) => {
+  const userAccessToken  = req.params.userAccessToken;
+  const foundInvitee = await Invitee.findOne({userAccessToken: userAccessToken});
+  res.status(200).json(foundInvitee);
+})
+
 // @description Get all people invited
 // @route       GET /api/v1/invitee
 exports.getInvitees = asyncHandler(async (req, res, next) => {
@@ -97,7 +103,7 @@ exports.updateInvitee = asyncHandler(async (req, res, next) => {
 // @description Delete existing invitee
 // @route       DELETE /api/v1/invitee/:id
 exports.deleteInvitee = asyncHandler(async (req, res, next) => {
-  const deletedInvitee = await Invitee.deleteOne(req.params.id);
+  const deletedInvitee = await Invitee.findByIdAndDelete(req.params.id);
   if (deletedInvitee) return res.status(204).json({});
   else
     return next(new ErrorResponse("Invitee", "NotFoundError", req.params.id));

@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const crypto = require("crypto");
+const slugify = require("slugify");
 
 const InviteeSchema = new mongoose.Schema({
     enteredName: {
@@ -51,6 +53,18 @@ const InviteeSchema = new mongoose.Schema({
     },
     dietaryNotes: String,
     additionalNotes: String,
+    inviteeAccessToken: String
   });
+
+  InviteeSchema.pre("save", async function (next) {
+    const sluggedName = slugify(this.enteredName, {
+      replacement: '-',  // replace spaces with replacement character, defaults to `-`
+      lower: true,      // convert to lower case, defaults to `false`
+      strict: true,     // strip special characters except replacement, defaults to `false`
+      trim: true         // trim leading and trailing replacement chars, defaults to `true`
+    })
+
+    this.inviteeAccessToken = sluggedName + "-" + crypto.randomBytes(8).toString("hex");
+  })
 
   module.exports = mongoose.model("Invitee", InviteeSchema);
