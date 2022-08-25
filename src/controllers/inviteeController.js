@@ -4,7 +4,9 @@ const asyncHandler = require("../middleware/async");
 
 exports.getInviteeFromUserAccessToken = asyncHandler(async (req, res, next) => {
   const userAccessToken  = req.params.userAccessToken;
-  const foundInvitee = await Invitee.findOne({userAccessToken: userAccessToken});
+  console.log(userAccessToken);
+  const foundInvitee = await Invitee.findOne({inviteeAccessToken:userAccessToken});
+  console.log("Token on found invitee " + foundInvitee.userAccessToken);
   res.status(200).json(foundInvitee);
 })
 
