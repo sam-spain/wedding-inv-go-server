@@ -10,6 +10,13 @@ exports.getInviteeFromUserAccessToken = asyncHandler(async (req, res, next) => {
   res.status(200).json(foundInvitee);
 })
 
+exports.updateInviteeFromUserAccessToken = asyncHandler(async (req, res, next) => {
+  const updateInvitee = (({preferredName, contactNumber, contactEmail, preferredContact, attendingCeremony, attendingReception, dietaryNotes, additionalNotes }) => ({preferredName, contactNumber, contactEmail, preferredContact, attendingCeremony, attendingReception, dietaryNotes, additionalNotes }))(req.body);
+  const userAccessToken = req.params.userAccessToken;
+  const foundInvitee = await Invitee.findOneAndUpdate({inviteeAccessToken:userAccessToken}, updateInvitee, {new: true});
+  res.status(200).json(foundInvitee);
+})
+
 // @description Get all people invited
 // @route       GET /api/v1/invitee
 exports.getInvitees = asyncHandler(async (req, res, next) => {

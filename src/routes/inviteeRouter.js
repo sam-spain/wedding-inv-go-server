@@ -5,7 +5,8 @@ const {
   createInvitee,
   updateInvitee,
   deleteInvitee,
-  getInviteeFromUserAccessToken
+  getInviteeFromUserAccessToken,
+  updateInviteeFromUserAccessToken
 } = require("../controllers/inviteeController");
 const inviteeRouter = express.Router();
 const { protect, authorize } = require("../middleware/auth");
@@ -21,5 +22,6 @@ inviteeRouter
 inviteeRouter
   .route("/fromToken/:userAccessToken")
   .get(getInviteeFromUserAccessToken)
+  .put(updateInviteeFromUserAccessToken)
 
 module.exports = inviteeRouter;
