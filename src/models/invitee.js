@@ -51,10 +51,25 @@ const InviteeSchema = new mongoose.Schema({
       type: Boolean,
       default: false,
     },
+    additionalGuestAvailable: {
+      type: Number,
+      default: 0
+    },
+    additionalGuests: [{
+      preferredName: String, dietaryNotes: String, additionalNotes: String
+    }],
     dietaryNotes: String,
     additionalNotes: String,
     inviteeAccessToken: String
   });
+
+  InviteeSchema.pre('validate', function(next) {
+    if (this.additionalGuests.length > this.additionalGuestAvailable) {
+        next(new Error('Too many guests'));
+    } else {
+        next();
+    }
+});
 
   InviteeSchema.pre("save", async function (next) {
     const sluggedName = slugify(this.enteredName, {
