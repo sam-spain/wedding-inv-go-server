@@ -16,7 +16,7 @@ app.use(morgan("dev"));
 
 const clientAddress = process.env.CLIENT_ADDRESS || "http://localhost:8080";
 const corsOptions = {
-  origin: [clientAddress, "http://localhost:5173"],
+  origin: [clientAddress, "http://localhost:5173", "http://192.168.1.126:5173"],
   credentials: true,
 };
 app.use(cors(corsOptions));
