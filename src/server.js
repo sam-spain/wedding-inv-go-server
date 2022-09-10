@@ -9,6 +9,7 @@ const cors = require("cors");
 const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require('helmet');
 const xssClean = require("xss-clean");
+const rateLimit = require('express-rate-limit');
 
 dotenv.config({ path: "./src/config/config.env" });
 
@@ -18,6 +19,15 @@ app.use(cookieParser());
 app.use(morgan("dev"));
 app.use(mongoSanitize());
 app.use(helmet());
+
+const limiter = rateLimit({
+	windowMs: 15 * 60 * 1000, // 15 minutes
+	max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+	standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+})
+
+app.use(limiter);
 app.use(xssClean());
 
 const clientAddress = process.env.CLIENT_ADDRESS || "http://localhost:8080";
