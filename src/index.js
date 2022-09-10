@@ -2,7 +2,7 @@ const Server = require("./server");
 const dotenv = require("dotenv");
 const PORT = process.env.PORT || 8080;
 const { connectDb } = require("./config/db");
-dotenv.config({ path: "./src/config/config.env" });
+dotenv.config();
 
 connectDb();
 
