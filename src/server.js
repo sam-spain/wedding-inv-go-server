@@ -12,7 +12,7 @@ const xssClean = require("xss-clean");
 const rateLimit = require('express-rate-limit');
 const hpp = require("hpp");
 
-dotenv.config({ path: "./src/config/config.env" });
+dotenv.config({ path: ".env" });
 
 const app = express();
 app.use(express.json());
