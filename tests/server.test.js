@@ -5,7 +5,7 @@ const User = require("../src/models/user");
 const Mockingoose = require("mockingoose");
 const jwt = require("jsonwebtoken");
 
-describe("Invitee API Endpoint", () => {
+xdescribe("Invitee API Endpoint", () => {
   const GENERIC_SERVER_ERROR = {
     errorType: "Unknown",
     content: "An unexpected server error occurred",
