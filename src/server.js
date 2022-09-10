@@ -8,6 +8,7 @@ const morgan = require("morgan");
 const cors = require("cors");
 const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require('helmet');
+const xssClean = require("xss-clean");
 
 dotenv.config({ path: "./src/config/config.env" });
 
@@ -17,6 +18,7 @@ app.use(cookieParser());
 app.use(morgan("dev"));
 app.use(mongoSanitize());
 app.use(helmet());
+app.use(xssClean());
 
 const clientAddress = process.env.CLIENT_ADDRESS || "http://localhost:8080";
 const corsOptions = {
