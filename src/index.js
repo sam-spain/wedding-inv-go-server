@@ -12,8 +12,6 @@ Server.use((req, res, next) => {
 });
 
 const server = Server.listen(PORT, () => {
-  console.log("Mongo URI");
-  console.log("MONGO URI " + process.env.MONGO_URI);
   console.log(`server started at http://localhost:${PORT}`);
 });
 
