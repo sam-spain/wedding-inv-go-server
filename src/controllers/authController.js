@@ -7,12 +7,11 @@ const user = require("../models/user");
 // @route POST /api/v1/auth/register
 // @access Public
 exports.register = asyncHandler(async (req, res, next) => {
-  const { name, email, password, role } = req.body;
+  const { name, email, password } = req.body;
   const user = await User.create({
     name,
     email,
     password,
-    role,
   });
 
   sendTokenResponse(user, 200, res);
@@ -62,7 +61,7 @@ exports.getMe = asyncHandler(async (req, res, next) => {
 // @access public
 exports.deleteTokenCookie = asyncHandler(async (req, res, next) => {
   res.clearCookie("token").status(204).end();
-})
+});
 
 const sendTokenResponse = (user, statusCode, res) => {
   const token = user.getSignedJwtToken();
