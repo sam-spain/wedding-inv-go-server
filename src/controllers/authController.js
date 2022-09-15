@@ -69,6 +69,7 @@ const sendTokenResponse = (user, statusCode, res) => {
     expires: generateCookieExpiryDate(),
     httpOnly: true,
     sameSite: "none",
+    secure: true,
   };
 
   if (process.env.NODE_ENV === "producton") {
