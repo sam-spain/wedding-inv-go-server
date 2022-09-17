@@ -61,7 +61,8 @@ const InviteeSchema = new mongoose.Schema({
   }],
   dietaryNotes: String,
   additionalNotes: String,
-  inviteeAccessToken: String
+  inviteeAccessToken: String,
+  adminNotes: String,
 });
 
 InviteeSchema.pre('validate', function (next) {
