@@ -33,6 +33,7 @@ const InviteeSchema = new mongoose.Schema({
     enum: ["Email", "Number", "Facebook"],
     default: "Email"
   },
+  declinedInvite: Boolean,
   invitedToCeremony: {
     type: Boolean,
     required: [true, "Please specify if invitee is welcome to attend ceremony"],
