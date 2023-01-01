@@ -3,6 +3,8 @@ const dotenv = require("dotenv");
 const PORT = process.env.PORT || 8080;
 const https = require("https");
 const fs = require("fs");
+let httpsServer;
+let server;
 if(process.env.NODE_ENV === "production") {
   const privateKey = fs.readFileSync(process.env.SSL_KEY_LOCATION, "utf8");
   const certificate = fs.readFileSync(
@@ -15,7 +17,7 @@ if(process.env.NODE_ENV === "production") {
     cert: certificate,
     ca: ca,
   };
-  const httpsServer = https.createServer(credentials, Server);
+  httpsServer = https.createServer(credentials, Server);
 }
 
 const { connectDb } = require("./config/db");
@@ -29,11 +31,11 @@ Server.use((req, res, next) => {
 });
 
 if(process.env.NODE_ENV === "production") {
-  const server = httpsServer.listen(PORT, () => {
+  server = httpsServer.listen(PORT, () => {
     console.log(`Secure server started at localhost:${PORT}`);
   });
 } else {
-  const server = Server.listen(PORT, () => {
+  server = Server.listen(PORT, () => {
     console.log(`server started at localhost:${PORT}`);
   });
 }
