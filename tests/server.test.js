@@ -27,15 +27,15 @@ describe("Invitee API Endpoint", () => {
 
   const KAREN_GO_INVITEE = {
     enteredName: 'Karen Go',
-    inviteeStatus: 'Sent',
-    preferredContact: 'Email',
-    invitedToCeremony: false,
-    attendingCeremony: false,
-    invitedToReception: false,
-    attendingReception: false,
-    additionalGuestAvailable: 0,
-    additionalGuests: [],
-    _id: '6240df980f82cbb88ae69580'
+      inviteeStatus: 'Sent',
+      preferredContact: 'Email',
+      invitedToCeremony: false,
+      attendingCeremony: false,
+      invitedToReception: false,
+      attendingReception: false,
+      additionalGuestAvailable: 0,
+      additionalGuests: [],
+      _id: '6240df980f82cbb88ae69580'
   };
 
   const NOT_FOUND_ERROR = {
@@ -168,7 +168,7 @@ describe("Invitee API Endpoint", () => {
   });
 
   test("Respond to DELETE with ID with empty and 204", () => {
-    Mockingoose(Invitee).toReturn(SAM_SPAIN_INVITEE, "deleteOne");
+    jest.spyOn(Invitee, "findByIdAndDelete").mockImplementationOnce(() => {return SAM_SPAIN_INVITEE});
     return Request(Server)
       .delete("/api/v1/invitee/" + SAM_SPAIN_INVITEE._id)
       .set("authorization", BEARER_TOKEN)
@@ -177,7 +177,7 @@ describe("Invitee API Endpoint", () => {
   });
 
   test("Respond to DELETE where invitee could not be found with 404", () => {
-    Mockingoose(Invitee).toReturn(null, "deleteOne");
+    jest.spyOn(Invitee, "findByIdAndDelete").mockImplementationOnce(() => {return undefined});
     return Request(Server)
       .delete("/api/v1/invitee/" + SAM_SPAIN_INVITEE._id)
       .set("authorization", BEARER_TOKEN)
@@ -186,7 +186,7 @@ describe("Invitee API Endpoint", () => {
   });
 
   test("Respond to DELETE that failed with 500", () => {
-    Mockingoose(Invitee).toReturn(new Error("Unexpected error"), "deleteOne");
+    jest.spyOn(Invitee, "findByIdAndDelete").mockImplementationOnce(() => {throw new Error("Unexpected error")});
     return Request(Server)
       .delete("/api/v1/invitee/" + SAM_SPAIN_INVITEE._id)
       .set("authorization", BEARER_TOKEN)
