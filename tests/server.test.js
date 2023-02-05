@@ -48,6 +48,79 @@ describe("Invitee API Endpoint", () => {
     role: "admin",
   };
 
+  const EXPECTED_SUMMARY_RESPONSE = {
+    invitationsSent: 5,
+    totalPossbleGuests: 7,
+    invitationsAccepted: 2,
+    invitationsDeclined: 1,
+    invitationsOutstanding: 1,
+    totalGuestsAttendingReception: 3,
+    totalGuestsAttendingCeremony: 4
+  }
+
+  const ACCEPTED_BOTH_WITH_GUEST = {
+    enteredName: 'Aam Bain',
+    inviteeStatus: 'Responded',
+    declinedInvite: false,
+    preferredContact: 'Email',
+    invitedToCeremony: true,
+    attendingCeremony: true,
+    invitedToReception: true,
+    attendingReception: true,
+    additionalGuestAvailable: 1,
+    additionalGuests: [{}]
+  }
+
+  const ACCEPTED_BOTH_NO_GUEST = {
+    enteredName: 'Ban Crain',
+    inviteeStatus: 'Responded',
+    declinedInvite: false,
+    preferredContact: 'Email',
+    invitedToCeremony: true,
+    attendingCeremony: true,
+    invitedToReception: true,
+    attendingReception: true,
+    additionalGuestAvailable: 0,
+    additionalGuests: []
+  }
+
+  const ACCEPTED_RECEPTION_NO_GUEST = {
+    enteredName: 'Cram Drain',
+    inviteeStatus: 'Responded',
+    declinedInvite: false,
+    preferredContact: 'Email',
+    invitedToCeremony: false,
+    attendingCeremony: false,
+    invitedToReception: true,
+    attendingReception: true,
+    additionalGuestAvailable: 0,
+    additionalGuests: []
+  }
+
+  const DECLINED = {
+    enteredName: 'Dran Ethain',
+    declinedInvite: true,
+    inviteeStatus: 'Responded',
+    invitedToCeremony: true,
+    attendingCeremony: false,
+    invitedToReception: true,
+    attendingReception: false,
+    additionalGuestAvailable: 0,
+    additionalGuests: []
+  }
+
+  const NOT_RESPONDED = {
+    enteredName: 'Edin Forn',
+    declinedInvite: false,
+    inviteeStatus: 'Sent',
+    invitedToCeremony: true,
+    attendingCeremony: false,
+    invitedToReception: true,
+    attendingReception: false,
+    additionalGuestAvailable: 0,
+    additionalGuests: []
+  }
+
   const BEARER_TOKEN = "Bearer token";
 
   beforeEach(() => {
@@ -193,6 +266,8 @@ describe("Invitee API Endpoint", () => {
       .expect(500)
       .expect(GENERIC_SERVER_ERROR);
   });
+
+  
 
   function mockAuthentication() {
     jest.spyOn(jwt, "verify").mockReturnValueOnce({ id: ADMIN_USER.id });
