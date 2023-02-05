@@ -5,32 +5,37 @@ const User = require("../src/models/user");
 const Mockingoose = require("mockingoose");
 const jwt = require("jsonwebtoken");
 
-xdescribe("Invitee API Endpoint", () => {
+describe("Invitee API Endpoint", () => {
   const GENERIC_SERVER_ERROR = {
     errorType: "Unknown",
     content: "An unexpected server error occurred",
   };
 
   const SAM_SPAIN_INVITEE = {
-    enteredName: "Sam Spain",
-    inviteeStatus: "Sent",
-    preferredContact: "Email",
+    enteredName: 'Sam Spain',
+    inviteeStatus: 'Sent',
+    preferredContact: 'Email',
     invitedToCeremony: false,
     attendingCeremony: false,
     invitedToReception: false,
     attendingReception: false,
-    _id: "6240df980f82cbb88ae6957f",
+    additionalGuestAvailable: 0,
+    additionalGuests: [],
+    _id: '6240df980f82cbb88ae6957f'
+    
   };
 
   const KAREN_GO_INVITEE = {
-    enteredName: "Karen Go",
-    inviteeStatus: "Sent",
-    preferredContact: "Email",
+    enteredName: 'Karen Go',
+    inviteeStatus: 'Sent',
+    preferredContact: 'Email',
     invitedToCeremony: false,
     attendingCeremony: false,
     invitedToReception: false,
     attendingReception: false,
-    _id: "6240df980f82cbb88ae69580",
+    additionalGuestAvailable: 0,
+    additionalGuests: [],
+    _id: '6240df980f82cbb88ae69580'
   };
 
   const NOT_FOUND_ERROR = {
@@ -57,9 +62,11 @@ xdescribe("Invitee API Endpoint", () => {
     );
     return Request(Server)
       .get("/api/v1/invitee")
+      .set("authorization", BEARER_TOKEN)
       .expect(200)
       .expect({
         count: 2,
+        limit: 25,
         pagination: {},
         data: [SAM_SPAIN_INVITEE, KAREN_GO_INVITEE],
       });
@@ -69,6 +76,7 @@ xdescribe("Invitee API Endpoint", () => {
     Mockingoose(Invitee).toReturn(new Error("Unexpected error"), "find");
     return Request(Server)
       .get("/api/v1/invitee")
+      .set("authorization", BEARER_TOKEN)
       .expect(GENERIC_SERVER_ERROR)
       .expect(500);
   });
@@ -77,6 +85,7 @@ xdescribe("Invitee API Endpoint", () => {
     Mockingoose(Invitee).toReturn(SAM_SPAIN_INVITEE, "findOne");
     return Request(Server)
       .get("/api/v1/invitee/" + SAM_SPAIN_INVITEE._id)
+      .set("authorization", BEARER_TOKEN)
       .expect(SAM_SPAIN_INVITEE)
       .expect(200);
   });
@@ -85,6 +94,7 @@ xdescribe("Invitee API Endpoint", () => {
     Mockingoose(Invitee).toReturn(new Error("Unexpected error"), "findOne");
     return Request(Server)
       .get("/api/v1/invitee/" + SAM_SPAIN_INVITEE._id)
+      .set("authorization", BEARER_TOKEN)
       .expect(GENERIC_SERVER_ERROR)
       .expect(500);
   });
@@ -93,6 +103,7 @@ xdescribe("Invitee API Endpoint", () => {
     Mockingoose(Invitee).toReturn(null, "findOne");
     return Request(Server)
       .get("/api/v1/invitee/" + SAM_SPAIN_INVITEE._id)
+      .set("authorization", BEARER_TOKEN)
       .expect(NOT_FOUND_ERROR)
       .expect(404);
   });
