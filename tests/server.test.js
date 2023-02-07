@@ -22,20 +22,20 @@ describe("Invitee API Endpoint", () => {
     additionalGuestAvailable: 0,
     additionalGuests: [],
     _id: '6240df980f82cbb88ae6957f'
-    
+
   };
 
   const KAREN_GO_INVITEE = {
     enteredName: 'Karen Go',
-      inviteeStatus: 'Sent',
-      preferredContact: 'Email',
-      invitedToCeremony: false,
-      attendingCeremony: false,
-      invitedToReception: false,
-      attendingReception: false,
-      additionalGuestAvailable: 0,
-      additionalGuests: [],
-      _id: '6240df980f82cbb88ae69580'
+    inviteeStatus: 'Sent',
+    preferredContact: 'Email',
+    invitedToCeremony: false,
+    attendingCeremony: false,
+    invitedToReception: false,
+    attendingReception: false,
+    additionalGuestAvailable: 0,
+    additionalGuests: [],
+    _id: '6240df980f82cbb88ae69580'
   };
 
   const NOT_FOUND_ERROR = {
@@ -47,79 +47,6 @@ describe("Invitee API Endpoint", () => {
     id: 300,
     role: "admin",
   };
-
-  const EXPECTED_SUMMARY_RESPONSE = {
-    invitationsSent: 5,
-    totalPossbleGuests: 7,
-    invitationsAccepted: 2,
-    invitationsDeclined: 1,
-    invitationsOutstanding: 1,
-    totalGuestsAttendingReception: 3,
-    totalGuestsAttendingCeremony: 4
-  }
-
-  const ACCEPTED_BOTH_WITH_GUEST = {
-    enteredName: 'Aam Bain',
-    inviteeStatus: 'Responded',
-    declinedInvite: false,
-    preferredContact: 'Email',
-    invitedToCeremony: true,
-    attendingCeremony: true,
-    invitedToReception: true,
-    attendingReception: true,
-    additionalGuestAvailable: 1,
-    additionalGuests: [{}]
-  }
-
-  const ACCEPTED_BOTH_NO_GUEST = {
-    enteredName: 'Ban Crain',
-    inviteeStatus: 'Responded',
-    declinedInvite: false,
-    preferredContact: 'Email',
-    invitedToCeremony: true,
-    attendingCeremony: true,
-    invitedToReception: true,
-    attendingReception: true,
-    additionalGuestAvailable: 0,
-    additionalGuests: []
-  }
-
-  const ACCEPTED_RECEPTION_NO_GUEST = {
-    enteredName: 'Cram Drain',
-    inviteeStatus: 'Responded',
-    declinedInvite: false,
-    preferredContact: 'Email',
-    invitedToCeremony: false,
-    attendingCeremony: false,
-    invitedToReception: true,
-    attendingReception: true,
-    additionalGuestAvailable: 0,
-    additionalGuests: []
-  }
-
-  const DECLINED = {
-    enteredName: 'Dran Ethain',
-    declinedInvite: true,
-    inviteeStatus: 'Responded',
-    invitedToCeremony: true,
-    attendingCeremony: false,
-    invitedToReception: true,
-    attendingReception: false,
-    additionalGuestAvailable: 0,
-    additionalGuests: []
-  }
-
-  const NOT_RESPONDED = {
-    enteredName: 'Edin Forn',
-    declinedInvite: false,
-    inviteeStatus: 'Sent',
-    invitedToCeremony: true,
-    attendingCeremony: false,
-    invitedToReception: true,
-    attendingReception: false,
-    additionalGuestAvailable: 0,
-    additionalGuests: []
-  }
 
   const BEARER_TOKEN = "Bearer token";
 
@@ -241,7 +168,7 @@ describe("Invitee API Endpoint", () => {
   });
 
   test("Respond to DELETE with ID with empty and 204", () => {
-    jest.spyOn(Invitee, "findByIdAndDelete").mockImplementationOnce(() => {return SAM_SPAIN_INVITEE});
+    jest.spyOn(Invitee, "findByIdAndDelete").mockImplementationOnce(() => { return SAM_SPAIN_INVITEE });
     return Request(Server)
       .delete("/api/v1/invitee/" + SAM_SPAIN_INVITEE._id)
       .set("authorization", BEARER_TOKEN)
@@ -250,7 +177,7 @@ describe("Invitee API Endpoint", () => {
   });
 
   test("Respond to DELETE where invitee could not be found with 404", () => {
-    jest.spyOn(Invitee, "findByIdAndDelete").mockImplementationOnce(() => {return undefined});
+    jest.spyOn(Invitee, "findByIdAndDelete").mockImplementationOnce(() => { return undefined });
     return Request(Server)
       .delete("/api/v1/invitee/" + SAM_SPAIN_INVITEE._id)
       .set("authorization", BEARER_TOKEN)
@@ -259,15 +186,13 @@ describe("Invitee API Endpoint", () => {
   });
 
   test("Respond to DELETE that failed with 500", () => {
-    jest.spyOn(Invitee, "findByIdAndDelete").mockImplementationOnce(() => {throw new Error("Unexpected error")});
+    jest.spyOn(Invitee, "findByIdAndDelete").mockImplementationOnce(() => { throw new Error("Unexpected error") });
     return Request(Server)
       .delete("/api/v1/invitee/" + SAM_SPAIN_INVITEE._id)
       .set("authorization", BEARER_TOKEN)
       .expect(500)
       .expect(GENERIC_SERVER_ERROR);
   });
-
-  
 
   function mockAuthentication() {
     jest.spyOn(jwt, "verify").mockReturnValueOnce({ id: ADMIN_USER.id });

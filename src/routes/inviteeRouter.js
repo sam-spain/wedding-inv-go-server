@@ -8,8 +8,12 @@ const {
   getInviteeFromUserAccessToken,
   updateInviteeFromUserAccessToken
 } = require("../controllers/inviteeController");
+const {getInviteeSummary} = require("../controllers/inviteeSummaryController");
 const inviteeRouter = express.Router();
 const { protect, authorize } = require("../middleware/auth");
+inviteeRouter
+  .route("/summary")
+  .get(getInviteeSummary);
 inviteeRouter
   .route("/")
   .get(protect, authorize("admin"), getInvitees)
@@ -23,5 +27,6 @@ inviteeRouter
   .route("/fromToken/:userAccessToken")
   .get(getInviteeFromUserAccessToken)
   .put(updateInviteeFromUserAccessToken)
+
 
 module.exports = inviteeRouter;
