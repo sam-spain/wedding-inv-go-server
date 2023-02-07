@@ -4,7 +4,7 @@ const asyncHandler = require("../middleware/async");
 // @description Get summary of invitees.
 // @route       GET /api/v1/invitee/summary
 exports.getInviteeSummary = asyncHandler(async (req, res, next) => {
-    let invitees = Invitee.find();
+    let invitees = await Invitee.find({});
 
     const RESPONSE = {
         invitationsSent: 0,
@@ -15,7 +15,7 @@ exports.getInviteeSummary = asyncHandler(async (req, res, next) => {
         totalGuestsAttendingReception: 0,
         totalGuestsAttendingCeremony: 0
     }
-
+    console.log('Before response creation');
     for(const invitee of invitees) {
         if(SENT_STATUSES.includes(invitee.inviteeStatus)) RESPONSE.invitationsSent++;
         if(invitee.inviteeStatus != "Revoked") RESPONSE.totalPossibleGuests += (1 + invitee.additionalGuests.length);
@@ -25,7 +25,7 @@ exports.getInviteeSummary = asyncHandler(async (req, res, next) => {
         if(invitee.attendingReception) RESPONSE.totalGuestsAttendingReception += (1 + invitee.additionalGuests.length);
         if(invitee.attendingCeremony) RESPONSE.totalGuestsAttendingCeremony += (1 + invitee.additionalGuests.length);
     }
-
+    console.log('After response creation');
     res.status(200).json(RESPONSE);
 })
 
