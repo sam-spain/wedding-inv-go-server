@@ -1,9 +1,7 @@
 const Request = require("supertest");
 const Server = require("../src/server");
 const Invitee = require("../src/models/invitee");
-const User = require("../src/models/user");
 const Mockingoose = require("mockingoose");
-const jwt = require("jsonwebtoken");
 
 describe("Invitee Summary API Endpoint", () => {
     const EXPECTED_SUMMARY_RESPONSE = {
@@ -90,8 +88,6 @@ describe("Invitee Summary API Endpoint", () => {
         additionalGuestAvailable: 0,
         additionalGuests: []
     }
-
-    const BEARER_TOKEN = "Bearer token";
 
     beforeEach(() => {
         Mockingoose.resetAll();
