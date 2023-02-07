@@ -1,5 +1,4 @@
 const Invitee = require("../models/invitee");
-const ErrorResponse = require("../util/errorResponse");
 const asyncHandler = require("../middleware/async");
 
 // @description Get summary of invitees.
