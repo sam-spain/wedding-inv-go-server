@@ -4,9 +4,8 @@ const asyncHandler = require("../middleware/async");
 // @description Get summary of invitees.
 // @route       GET /api/v1/invitee/summary
 exports.getInviteeSummary = asyncHandler(async (req, res, next) => {
-    let invitees = await Invitee.find({});
-
-    const RESPONSE = {
+    const invitees = await Invitee.find({});
+    const response = {
         invitationsSent: 0,
         totalPossibleGuests: 0,
         invitationsAccepted: 0,
@@ -15,18 +14,16 @@ exports.getInviteeSummary = asyncHandler(async (req, res, next) => {
         totalGuestsAttendingReception: 0,
         totalGuestsAttendingCeremony: 0
     }
-    console.log('Before response creation');
-    for(const invitee of invitees) {
-        if(SENT_STATUSES.includes(invitee.inviteeStatus)) RESPONSE.invitationsSent++;
-        if(invitee.inviteeStatus != "Revoked") RESPONSE.totalPossibleGuests += (1 + invitee.additionalGuests.length);
-        if(invitee.attendingCeremony || invitee.attendingReception) RESPONSE.invitationsAccepted++;
-        if(invitee.declinedInvite) RESPONSE.invitationsDeclined++;
-        if(invitee.inviteeStatus == "Sent") RESPONSE.invitationsOutstanding++;
-        if(invitee.attendingReception) RESPONSE.totalGuestsAttendingReception += (1 + invitee.additionalGuests.length);
-        if(invitee.attendingCeremony) RESPONSE.totalGuestsAttendingCeremony += (1 + invitee.additionalGuests.length);
+    for (const invitee of invitees) {
+        if (SENT_STATUSES.includes(invitee.inviteeStatus)) response.invitationsSent++;
+        if (invitee.inviteeStatus != "Revoked") response.totalPossibleGuests += (1 + invitee.additionalGuests.length);
+        if (invitee.attendingCeremony || invitee.attendingReception) response.invitationsAccepted++;
+        if (invitee.declinedInvite) response.invitationsDeclined++;
+        if (invitee.inviteeStatus == "Sent") response.invitationsOutstanding++;
+        if (invitee.attendingReception) response.totalGuestsAttendingReception += (1 + invitee.additionalGuests.length);
+        if (invitee.attendingCeremony) response.totalGuestsAttendingCeremony += (1 + invitee.additionalGuests.length);
     }
-    console.log('After response creation');
-    res.status(200).json(RESPONSE);
+    res.status(200).json(response);
 })
 
 const SENT_STATUSES = [
